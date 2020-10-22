@@ -1,0 +1,15 @@
+apiVersion: qbec.io/v1alpha1
+kind: App
+metadata:
+  name: jh
+spec:
+  libPaths:
+    - lib
+  environments:
+    default:
+      defaultNamespace: jupyterhub-default
+      server: https://kubernetes.docker.internal:6443
+    smesh:
+      defaultNamespace: jupyterhub-smesh
+      server: https://kubernetes.docker.internal:6443
+  vars: {}
