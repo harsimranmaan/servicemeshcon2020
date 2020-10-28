@@ -157,7 +157,7 @@
         limit: null,
       },
       serviceAccountName: 'hub',
-      startTimeout: 600,
+      startTimeout: 300,
       storage: {
         capacity: '1Gi',
         dynamic: {
