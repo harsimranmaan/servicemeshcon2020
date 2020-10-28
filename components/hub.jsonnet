@@ -71,6 +71,7 @@ local hubConfigmap = {
   apiVersion: 'v1',
   kind: 'ConfigMap',
   metadata: {
+    namespace: std.extVar('qbec.io/defaultNs'),
     name: 'hub-config',
   },
   data: {
@@ -86,6 +87,7 @@ local deployment = {
   kind: 'Deployment',
   metadata: {
     name: hub.name,
+    namespace: std.extVar('qbec.io/defaultNs'),
     labels: {
       app: 'jupyter',
       component: hub.name,

@@ -29,6 +29,7 @@ local proxyPublicSvc = if params.components.namespace.istio == 'disabled' then s
   kind: 'Gateway',
   metadata: {
     name: 'jupyterhub-gateway',
+    namespace: std.extVar('qbec.io/defaultNs'),
   },
   spec: {
     selector: {
@@ -53,6 +54,7 @@ local deployment = {
   kind: 'Deployment',
   metadata: {
     name: proxy.name,
+    namespace: std.extVar('qbec.io/defaultNs'),
     labels: {
       app: 'jupyter',
       component: proxy.name,
