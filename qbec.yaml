@@ -7,7 +7,7 @@ spec:
     - lib
   environments:
     default:
-      defaultNamespace: jupyterhub-default
+      defaultNamespace: jupyterhub
       server: https://kubernetes.docker.internal:6443
     smesh:
       defaultNamespace: jupyterhub-smesh

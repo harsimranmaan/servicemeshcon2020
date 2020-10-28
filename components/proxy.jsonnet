@@ -1,6 +1,6 @@
 local params = import '../params.libsonnet';
-local service = import 'service.libsonnet';
 local pdb = import 'pdb.libsonnet';
+local service = import 'service.libsonnet';
 
 local proxy = params.components.proxy;
 
@@ -26,4 +26,83 @@ local apiPorts = [{
 }];
 local proxyPublicSvc = service.service('proxy-public', { component: proxy.name }, publicPorts, 'LoadBalancer');
 local proxyApiSvc = service.service('proxy-api', { component: proxy.name }, apiPorts, 'ClusterIP');
-[proxyPdb,proxyPublicSvc, proxyApiSvc]
+
+local deployment = {
+  apiVersion: 'apps/v1',
+  kind: 'Deployment',
+  metadata: {
+    name: proxy.name,
+    labels: {
+      app: 'jupyter',
+      component: proxy.name,
+    },
+  },
+  spec: {
+    replicas: 1,
+    selector: {
+      matchLabels: {
+        app: 'jupyter',
+        component: proxy.name,
+      },
+    },
+    strategy: {
+      type: 'Recreate',
+    },
+    template: {
+      metadata: {
+        labels: {
+          app: 'jupyter',
+          component: proxy.name,
+        },
+      },
+      spec: {
+        containers: [
+          {
+            name: 'proxy',
+            image: 'jupyterhub/configurable-http-proxy:4.2.1',
+            command: [
+              'configurable-http-proxy',
+              '--ip=0.0.0.0',
+              '--api-ip=0.0.0.0',
+              '--api-port=8001',
+              '--default-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)',
+              '--error-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)/hub/error',
+              '--port=8000',
+            ],
+            env: [
+              {
+                name: 'CONFIGPROXY_AUTH_TOKEN',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: 'hub-secret',
+                    key: 'proxy.token',
+                  },
+                },
+              },
+            ],
+            ports: [
+              {
+                containerPort: 8001,
+                name: 'proxy-api',
+              },
+              {
+                containerPort: 8000,
+                name: 'proxy-public',
+              },
+            ],
+            resources: {
+              cpu: '200m',
+              memory: '512Mi',
+            },
+            securityContext: {
+              allowPrivilegeEscalation: false,
+            },
+          },
+        ],
+      },
+    },
+  },
+};
+
+
+[proxyPdb, proxyPublicSvc, proxyApiSvc, deployment]
