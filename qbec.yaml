@@ -1,7 +1,7 @@
 apiVersion: qbec.io/v1alpha1
 kind: App
 metadata:
-  name: jh
+  name: ServiceMeshConNA2020
 spec:
   libPaths:
     - lib
@@ -9,7 +9,7 @@ spec:
     default:
       defaultNamespace: jupyterhub
       server: https://kubernetes.docker.internal:6443
-    smesh:
-      defaultNamespace: jupyterhub-smesh
-      server: https://kubernetes.docker.internal:6443
-  vars: {}
+  vars:
+    external:
+      - default: disabled
+        name: ISTIO

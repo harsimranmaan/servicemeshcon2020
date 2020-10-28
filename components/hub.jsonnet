@@ -74,7 +74,8 @@ local hubConfigmap = {
     name: 'hub-config',
   },
   data: {
-    'jupyterhub_config.py': importstr 'hub/files/jupyterhub_config.py',
+    'jupyterhub_config.py': if params.components.namespace.istio == 'disabled' then importstr 'hub/files/jupyterhub_config.py' else
+      importstr 'hub/files/jupyterhub_config_istio.py',
     'z2jh.py': importstr 'hub/files/z2jh.py',
     'values.yaml': std.manifestYamlDoc({ hub: params.components.hub, auth: params.global.auth, singleuser: params.global.singleuser, debug: params.global.debug }),
   },
@@ -106,6 +107,9 @@ local deployment = {
         labels: {
           app: 'jupyter',
           component: hub.name,
+        },
+        annotations: {
+          'checksum/config-map': std.md5(std.manifestYamlDoc(hubConfigmap)),
         },
       },
       spec: {

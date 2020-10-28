@@ -2,7 +2,7 @@
 {
   components: {
     namespace: {
-      istio: 'disabled',
+      istio: std.extVar('ISTIO'),
     },
     hub: {
       name: 'hub',
@@ -156,7 +156,8 @@
         guarantee: '1G',
         limit: null,
       },
-      startTimeout: 300,
+      serviceAccountName: 'hub',
+      startTimeout: 600,
       storage: {
         capacity: '1Gi',
         dynamic: {
