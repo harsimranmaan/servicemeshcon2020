@@ -5,6 +5,9 @@ For more info on qbec:
 
 Demo based on [https://medium.com/@harsimranmaan/running-jupyterhub-with-istio-service-mesh-on-kubernetes-a-troubleshooting-journey-707039f36a7b](https://medium.com/@harsimranmaan/running-jupyterhub-with-istio-service-mesh-on-kubernetes-a-troubleshooting-journey-707039f36a7b)
 
+## Setup
+
+Enable Kubernetes on Docker for Mac.
 
 ## Demo flow
 1. Do a stock deployment
@@ -35,7 +38,7 @@ qbec apply default --vm:ext-str ISTIO=enabled
 ```
 
 
-## Enable/disable istio and PeerAuth
+## Enable/disable istio and PeerAuth on the namespace
 
 Enable istio on namespace(not needed if running ):
 ```bash
